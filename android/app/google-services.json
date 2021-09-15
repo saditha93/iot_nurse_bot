@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "936967007820",
+    "project_id": "nurse-bot-4ed5f",
+    "storage_bucket": "nurse-bot-4ed5f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:936967007820:android:a52216c04d55b46bb70ee9",
+        "android_client_info": {
+          "package_name": "com.iot_ass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "936967007820-lkh2uoo0ci8d3ubl0bl5sv1nnos4putn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEB5nBV8UyJIVa_XZeuHULf3DDSmTxv-o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "936967007820-lkh2uoo0ci8d3ubl0bl5sv1nnos4putn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
