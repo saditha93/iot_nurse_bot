@@ -377,6 +377,8 @@ PODS:
   - RNScreens (3.7.0):
     - React-Core
     - React-RCTImage
+  - RNSVG (12.1.1):
+    - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -436,6 +438,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -528,6 +531,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/database"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -586,9 +591,10 @@ SPEC CHECKSUMS:
   RNFBApp: b97d6654509a5852d49f0abf93be76b300fd2e2c
   RNFBDatabase: 194a730d8182d81cccb7c8126b6e8a71f3bf5d74
   RNScreens: 2a71d74b4e530f051f5684c8111d7591176722cf
+  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   Yoga: aa0cb45287ebe1004c02a13f279c55a95f1572f4
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: fa5241247d135644925164558417ad1ca22e54a5
+PODFILE CHECKSUM: 5bd20566a745c6d4ffb190b12956d078a05f64c2
 
 COCOAPODS: 1.10.1
