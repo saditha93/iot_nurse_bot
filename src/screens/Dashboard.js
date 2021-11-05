@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
-} from 'react-native';
+} from "react-native";
 import {
   COLORS,
   FONTS,
@@ -15,32 +15,32 @@ import {
   SIZES,
   images,
   VictoryCustomTheme,
-} from '../constants';
-import {DashboardCards} from '../components';
+} from "../constants";
+import { DashboardCards } from "../components";
 import {
   VictoryScatter,
   VictoryAxis,
   VictoryLine,
   VictoryChart,
-} from 'victory-native';
-import database from '@react-native-firebase/database';
-import {Modalize} from 'react-native-modalize';
+} from "victory-native";
+import database from "@react-native-firebase/database";
+import { Modalize } from "react-native-modalize";
 
 const Dashboard = props => {
   const modalizeRef = React.useRef(null);
 
   const [chartData, setChartData] = useState([
-    {x: 1, y: 2.6},
-    {x: 1.5, y: 2.2},
-    {x: 2, y: 2},
-    {x: 2.5, y: 2.2},
-    {x: 3, y: 1.6},
-    {x: 3.5, y: 2.1},
-    {x: 4, y: 2.5},
-    {x: 5, y: 1.6},
-    {x: 3.5, y: 2.1},
-    {x: 6, y: 1.6},
-    {x: 7, y: 3.5},
+    { x: 1, y: 2.6 },
+    { x: 1.5, y: 2.2 },
+    { x: 2, y: 2 },
+    { x: 2.5, y: 2.2 },
+    { x: 3, y: 1.6 },
+    { x: 3.5, y: 2.1 },
+    { x: 4, y: 2.5 },
+    { x: 5, y: 1.6 },
+    { x: 3.5, y: 2.1 },
+    { x: 6, y: 1.6 },
+    { x: 7, y: 3.5 },
   ]);
 
   const [data, setData] = useState([]);
@@ -55,30 +55,30 @@ const Dashboard = props => {
 
   const GetData = () => {
     database()
-      .ref('/users/admin')
-      .on('value', snapshot => {
-        console.log('User data: ', snapshot.val());
+      .ref("/users/admin")
+      .on("value", snapshot => {
+        console.log("User data: ", snapshot.val());
         setData(snapshot.val());
       });
 
     database()
-      .ref('/users/Analysis')
-      .on('value', snapshot => {
-        console.log('User data: ', snapshot.val());
+      .ref("/users/Analysis")
+      .on("value", snapshot => {
+        console.log("User data: ", snapshot.val());
         //setData(snapshot.val());
         setDataAnalysis(snapshot.val());
       });
 
     database()
-      .ref('/users/Temperature')
-      .on('value', snapshot => {
-        console.log('User data: ', snapshot.val());
+      .ref("/users/Temperature")
+      .on("value", snapshot => {
+        console.log("User data: ", snapshot.val());
         //setData(snapshot.val());
         setTemper(snapshot.val());
       });
     database()
-      .ref('/users/Patients')
-      .on('value', snapshot => {
+      .ref("/users/Patients")
+      .on("value", snapshot => {
         var list = [];
         snapshot.forEach(child => {
           const childData = child.val();
@@ -91,7 +91,7 @@ const Dashboard = props => {
           });
         });
 
-        console.log('User data: ', list);
+        console.log("User data: ", list);
         //setData(snapshot.val());
         setPatients(list);
       });
@@ -99,12 +99,12 @@ const Dashboard = props => {
 
   const sendData = () => {
     database()
-      .ref('/users/Temperature')
+      .ref("/users/Temperature")
       .set({
         temp: 10.03,
         weight: 1.5,
       })
-      .then(() => console.log('Data set.'));
+      .then(() => console.log("Data set."));
 
     //       #import requests
     // #import json
@@ -119,14 +119,14 @@ const Dashboard = props => {
     // #print (results)
 
     database()
-      .ref('/users/Analysis')
+      .ref("/users/Analysis")
       .set({
         Current: 20,
         TotPatients: 280,
         Discharge: 260,
         Critical: 6,
       })
-      .then(() => console.log('Data set.'));
+      .then(() => console.log("Data set."));
 
     // database()
     //   .ref('users/Patients')
@@ -151,18 +151,18 @@ const Dashboard = props => {
   const HeaderBar = () => (
     <View
       style={{
-        flexDirection: 'row',
+        flexDirection: "row",
         marginLeft: SIZES.padding,
         marginTop: SIZES.padding * 2,
       }}>
-      <View style={{flex: 1}}>
-        <Text style={{...FONTS.h2}}>
+      <View style={{ flex: 1 }}>
+        <Text style={{ ...FONTS.h2 }}>
           <Text>Welcome!</Text>
         </Text>
-        <Text style={{color: COLORS.gray, ...FONTS.body4}}>Nov 06 2021</Text>
+        <Text style={{ color: COLORS.gray, ...FONTS.body4 }}>Nov 06 2021</Text>
       </View>
 
-      <View style={{flexDirection: 'row', height: '100%', marginRight: -20}}>
+      <View style={{ flexDirection: "row", height: "100%", marginRight: -20 }}>
         <Image
           source={images.logo}
           style={{
@@ -177,7 +177,7 @@ const Dashboard = props => {
 
   const PatientSelection = item => {
     modalizeRef.current?.close();
-    props.navigation.navigate('PatientDetails');
+    props.navigation.navigate("PatientDetails");
   };
 
   return (
@@ -193,7 +193,7 @@ const Dashboard = props => {
               borderRadius: 10,
               backgroundColor: COLORS.white,
               padding: SIZES.padding,
-              shadowColor: data?.spo2 > 96 ? 'red' : '#000',
+              shadowColor: data?.spo2 > 96 ? "red" : "#000",
               shadowOffset: {
                 width: 0,
                 height: 2,
@@ -202,105 +202,126 @@ const Dashboard = props => {
               shadowRadius: 6.65,
               elevation: 3,
             }}>
-            <Text style={{...FONTS.h3}}>Live Data</Text>
+            <Text style={{ ...FONTS.h3 }}>Live Data</Text>
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: "row",
                 marginTop: SIZES.base,
                 flex: 1,
               }}>
-              <Text style={{...FONTS.body4, flex: 1}}>Pulse Rate</Text>
-              <Text style={{...FONTS.body4, flex: 1, textAlign: 'center'}}>
+              <Text style={{ ...FONTS.body4, flex: 1 }}>Pulse Rate</Text>
+              <Text style={{ ...FONTS.body4, flex: 1, textAlign: "center" }}>
                 :
               </Text>
-              <Text style={{...FONTS.body4, flex: 1, textAlign: 'right'}}>
+              <Text style={{ ...FONTS.body4, flex: 1, textAlign: "right" }}>
                 {data?.bpm?.toFixed(2)}
               </Text>
             </View>
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: "row",
                 marginTop: SIZES.base,
                 flex: 1,
               }}>
-              <Text style={{...FONTS.body4, flex: 1}}>Oxygen level</Text>
-              <Text style={{...FONTS.body4, flex: 1, textAlign: 'center'}}>
+              <Text style={{ ...FONTS.body4, flex: 1 }}>Oxygen level</Text>
+              <Text style={{ ...FONTS.body4, flex: 1, textAlign: "center" }}>
                 :
               </Text>
-              <Text style={{...FONTS.body4, flex: 1, textAlign: 'right'}}>
+              <Text style={{ ...FONTS.body4, flex: 1, textAlign: "right" }}>
                 {data?.spo2?.toFixed(2)}
               </Text>
             </View>
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: "row",
                 marginTop: SIZES.base,
                 flex: 1,
               }}>
-              <Text style={{...FONTS.body4, flex: 1}}>Temperature</Text>
-              <Text style={{...FONTS.body4, flex: 1, textAlign: 'center'}}>
+              <Text style={{ ...FONTS.body4, flex: 1 }}>Temperature</Text>
+              <Text style={{ ...FONTS.body4, flex: 1, textAlign: "center" }}>
                 :
               </Text>
-              <Text style={{...FONTS.body4, flex: 1, textAlign: 'right'}}>
+              <Text style={{ ...FONTS.body4, flex: 1, textAlign: "right" }}>
                 {temper?.temp?.toFixed(2)}
               </Text>
             </View>
 
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: "row",
                 marginTop: SIZES.base,
                 flex: 1,
               }}>
-              <Text style={{...FONTS.body4, flex: 1}}>Weight</Text>
-              <Text style={{...FONTS.body4, flex: 1, textAlign: 'center'}}>
+              <Text style={{ ...FONTS.body4, flex: 1 }}>Weight</Text>
+              <Text style={{ ...FONTS.body4, flex: 1, textAlign: "center" }}>
                 :
               </Text>
-              <Text style={{...FONTS.body4, flex: 1, textAlign: 'right'}}>
+              <Text style={{ ...FONTS.body4, flex: 1, textAlign: "right" }}>
                 {temper?.weight?.toFixed(2)}
               </Text>
             </View>
 
             <TouchableOpacity
               style={{
-                width: '80%',
+                width: "80%",
                 borderWidth: 1,
                 borderColor: COLORS.primary,
                 borderRadius: 10,
                 margin: SIZES.padding,
                 padding: SIZES.base,
-                justifyContent: 'center',
-                alignContent: 'center',
-                alignSelf: 'center',
+                justifyContent: "center",
+                alignContent: "center",
+                alignSelf: "center",
               }}
               onPress={() => {
                 modalizeRef.current?.open();
               }}>
-              <Text style={{textAlign: 'center', color: COLORS.primary}}>
+              <Text style={{ textAlign: "center", color: COLORS.primary }}>
                 Add Patients Details
               </Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                width: "80%",
+                borderWidth: 1,
+                borderColor: COLORS.primary,
+                borderRadius: 10,
+                margin: SIZES.padding,
+                padding: SIZES.base,
+                justifyContent: "center",
+                alignContent: "center",
+                alignSelf: "center",
+              }}
+              onPress={() => {
+                props.navigation.navigate("RegisterForm");
+              }}>
+              <Text style={{ textAlign: "center", color: COLORS.primary }}>
+                New Patients Register
+              </Text>
+            </TouchableOpacity>
+
           </View>
 
           <View
             style={{
-              flexDirection: 'row',
+              flexDirection: "row",
               marginTop: SIZES.padding,
-              justifyContent: 'space-between',
+              justifyContent: "space-between",
               marginLeft: SIZES.padding,
               marginRight: SIZES.padding,
             }}>
-            <Text style={{...FONTS.h3}}>Patients Analysis</Text>
+            <Text style={{ ...FONTS.h3 }}>Patients Analysis</Text>
           </View>
 
           <View
             style={{
-              alignItems: 'center',
+              alignItems: "center",
               marginTop: SIZES.base,
             }}>
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: "row",
                 marginLeft: SIZES.padding,
                 marginRight: SIZES.padding,
               }}>
@@ -311,8 +332,8 @@ const Dashboard = props => {
                 Increment="-10"
                 icon={icons.list}
                 onPress={() => {
-                  alert('Current');
-                  props.navigation.navigate('Control');
+                  alert("Current");
+                  props.navigation.navigate("Control");
                 }}
               />
               <DashboardCards
@@ -321,12 +342,12 @@ const Dashboard = props => {
                 Amount="6"
                 Increment=""
                 icon={icons.home}
-                onPress={() => alert('Critical')}
+                onPress={() => alert("Critical")}
               />
             </View>
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: "row",
                 marginTop: SIZES.padding,
                 marginLeft: SIZES.padding,
                 marginRight: SIZES.padding,
@@ -337,7 +358,7 @@ const Dashboard = props => {
                 Amount="280"
                 Increment=""
                 icon={icons.home}
-                onPress={() => alert('Tot. Patients')}
+                onPress={() => alert("Tot. Patients")}
               />
               <DashboardCards
                 colors={COLORS.primary}
@@ -345,7 +366,7 @@ const Dashboard = props => {
                 Amount="260"
                 Increment="+10"
                 icon={icons.settings}
-                onPress={() => alert('Discharge')}
+                onPress={() => alert("Discharge")}
               />
             </View>
           </View>
@@ -356,13 +377,13 @@ const Dashboard = props => {
             <View>
               <View
                 style={{
-                  flexDirection: 'row',
+                  flexDirection: "row",
                   marginTop: SIZES.padding,
-                  justifyContent: 'space-between',
+                  justifyContent: "space-between",
                   marginLeft: SIZES.padding,
                   marginRight: SIZES.padding,
                 }}>
-                <Text style={{...FONTS.h3}}>Week Analysis</Text>
+                <Text style={{ ...FONTS.h3 }}>Week Analysis</Text>
               </View>
               <View
                 style={{
@@ -379,13 +400,13 @@ const Dashboard = props => {
                         stroke: COLORS.secondary,
                       },
                       parent: {
-                        border: '1px solid #CCC',
+                        border: "1px solid #CCC",
                       },
                     }}
                     data={chartData}
                     categories={{
-                      x: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                      y: ['75', '150', '225', '250'],
+                      x: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                      y: ["75", "150", "225", "250"],
                     }}
                   />
                   <VictoryScatter
@@ -407,24 +428,24 @@ const Dashboard = props => {
             adjustToContentHeight={true}
             disableScrollIfPossible={true}>
             <View
-              style={{marginLeft: SIZES.padding, marginRight: SIZES.padding}}>
+              style={{ marginLeft: SIZES.padding, marginRight: SIZES.padding }}>
               <Text
                 style={{
                   ...FONTS.h2,
-                  textAlign: 'center',
+                  textAlign: "center",
                   marginTop: SIZES.base * 2,
                   marginBottom: SIZES.base,
                 }}>
                 Patients List
               </Text>
-              <View style={{height: 235}}>
+              <View style={{ height: 235 }}>
                 <ScrollView>
                   {Patients.map((item, index) => (
                     <View key={index}>
                       <TouchableOpacity
                         style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
+                          flexDirection: "row",
+                          alignItems: "center",
                           paddingVertical: SIZES.base,
                         }}
                         onPress={() => PatientSelection(item)}>
@@ -437,23 +458,23 @@ const Dashboard = props => {
                           }}
                         />
 
-                        <View style={{flex: 1, marginLeft: SIZES.radius}}>
-                          <Text style={{...FONTS.h3}}>{item.name}</Text>
-                          <Text style={{color: COLORS.gray, ...FONTS.body5}}>
+                        <View style={{ flex: 1, marginLeft: SIZES.radius }}>
+                          <Text style={{ ...FONTS.h3 }}>{item.name}</Text>
+                          <Text style={{ color: COLORS.gray, ...FONTS.body5 }}>
                             Patient ID : {item.id}
                           </Text>
                         </View>
 
                         <View
                           style={{
-                            flexDirection: 'row',
-                            height: '100%',
-                            alignItems: 'center',
+                            flexDirection: "row",
+                            height: "100%",
+                            alignItems: "center",
                           }}>
                           <Text
                             style={{
                               color:
-                                item.type == 'B' ? COLORS.green : COLORS.black,
+                                item.type == "B" ? COLORS.green : COLORS.black,
                               ...FONTS.h3,
                             }}>
                             {item.status}
@@ -470,7 +491,7 @@ const Dashboard = props => {
                       </TouchableOpacity>
                       <View
                         style={{
-                          width: '100%',
+                          width: "100%",
                           height: 1,
                           backgroundColor: COLORS.lightGray,
                         }}></View>
@@ -505,7 +526,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   shadow: {
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,

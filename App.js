@@ -8,6 +8,7 @@ import {
   Control,
   SplashScreen,
   PatientDetails,
+  RegisterForm
 } from './src/screens';
 import tabs from './src/navigation/tabs';
 const Stack = createNativeStackNavigator();
@@ -26,6 +27,7 @@ const App = () => {
         <Stack.Screen name="Home2" component={Home} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="Control" component={Control} />
+        <Stack.Screen name="RegisterForm" component={RegisterForm} />
         <Stack.Screen name="PatientDetails" component={PatientDetails} />
       </Stack.Navigator>
     </NavigationContainer>
