@@ -45,6 +45,7 @@ const RegisterForm = () => {
 
   const savePatients = async () => {
     try {
+
       database()
         .ref("/users/Patients")
         .set({
@@ -99,14 +100,17 @@ const RegisterForm = () => {
         placeholderTextColor="grey"
         onChangeText={val => onChangePhoneNumber(val)}
       />
+
       <Text>Gender</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Gender"
-        autoCapitalize="none"
-        placeholderTextColor="grey"
-        onChangeText={val => onChangeGender(val)}
-      />
+      <Picker
+        selectedValue={gender}
+        style={{ height: 50, width: 150 }}
+        onValueChange={(itemValue, itemIndex) => onChangeGender(itemValue)}
+      >
+        <Picker.Item label="Male" value="male" />
+        <Picker.Item label="Femlale" value="female" />
+      </Picker>
+
       <Text>Remarks</Text>
       <TextInput
         style={styles.input}
