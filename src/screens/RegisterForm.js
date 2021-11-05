@@ -47,16 +47,24 @@ const RegisterForm = () => {
     try {
 
       database()
-        .ref("/users/Patients")
-        .set({
+        .ref("users/Patients")
+        .push({
           nic_id: nic_id,
           name: name,
           address: address,
           phone_number: phone_number,
           gender: gender,
           remarks: remarks,
+          upDateOn: new Date().toLocaleString(),
         })
-        .then(() => console.log("Data set."));
+        .then(data => {
+          //success callback
+          console.log("data ", data);
+        })
+        .catch(error => {
+          //error callback
+          console.log("error ", error);
+        });
 
       console.log("patients successfully signed up!: ");
     } catch (err) {
