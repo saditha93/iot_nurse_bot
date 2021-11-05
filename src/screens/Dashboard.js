@@ -1,5 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, Image, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
 import {
   COLORS,
   FONTS,
@@ -16,8 +24,11 @@ import {
   VictoryChart,
 } from 'victory-native';
 import database from '@react-native-firebase/database';
+import {Modalize} from 'react-native-modalize';
 
 const Dashboard = props => {
+  const modalizeRef = React.useRef(null);
+
   const [chartData, setChartData] = useState([
     {x: 1, y: 2.6},
     {x: 1.5, y: 2.2},
@@ -34,9 +45,11 @@ const Dashboard = props => {
 
   const [data, setData] = useState([]);
   const [dataAnalysis, setDataAnalysis] = useState([]);
+  const [temper, setTemper] = useState([]);
+  const [Patients, setPatients] = useState([]);
 
   useEffect(() => {
-    //sendData();
+    sendData();
     GetData();
   }, []);
 
@@ -55,16 +68,55 @@ const Dashboard = props => {
         //setData(snapshot.val());
         setDataAnalysis(snapshot.val());
       });
+
+    database()
+      .ref('/users/Temperature')
+      .on('value', snapshot => {
+        console.log('User data: ', snapshot.val());
+        //setData(snapshot.val());
+        setTemper(snapshot.val());
+      });
+    database()
+      .ref('/users/Patients')
+      .on('value', snapshot => {
+        var list = [];
+        snapshot.forEach(child => {
+          const childData = child.val();
+          list.push({
+            key: child.key,
+            id: childData.id,
+            name: childData.name,
+            status: childData.status,
+            updateOn: childData.updateOn,
+          });
+        });
+
+        console.log('User data: ', list);
+        //setData(snapshot.val());
+        setPatients(list);
+      });
   };
 
   const sendData = () => {
     database()
-      .ref('/users/admin')
+      .ref('/users/Temperature')
       .set({
         temp: 10.03,
         weight: 1.5,
       })
       .then(() => console.log('Data set.'));
+
+    //       #import requests
+    // #import json
+
+    // #from firebase import firebase
+
+    // #firebase = firebase.FirebaseApplication('https://nurse-bot-4ed5f-default-rtdb.firebaseio.com/', None)
+    // #result = firebase.get('/users/admin', None)
+    // #print (result)
+
+    // #results = firebase.post('/users/admin', {'temp':10.23,'weight':2})
+    // #print (results)
 
     database()
       .ref('/users/Analysis')
@@ -75,7 +127,26 @@ const Dashboard = props => {
         Critical: 6,
       })
       .then(() => console.log('Data set.'));
+
+    // database()
+    //   .ref('users/Patients')
+    //   .push({
+    //     id: '003',
+    //     name: 'Saditha Udayanga',
+    //     status: 'Good',
+    //     updateOn: '2021/11/01',
+    //   })
+    //   .then(data => {
+    //     //success callback
+    //     console.log('data ', data);
+    //   })
+    //   .catch(error => {
+    //     //error callback
+    //     console.log('error ', error);
+    //   });
   };
+
+  // modalizeRef.current?.close();
 
   const HeaderBar = () => (
     <View
@@ -88,7 +159,7 @@ const Dashboard = props => {
         <Text style={{...FONTS.h2}}>
           <Text>Welcome!</Text>
         </Text>
-        <Text style={{color: COLORS.gray, ...FONTS.body4}}>Sep 26 2021</Text>
+        <Text style={{color: COLORS.gray, ...FONTS.body4}}>Nov 06 2021</Text>
       </View>
 
       <View style={{flexDirection: 'row', height: '100%', marginRight: -20}}>
@@ -104,6 +175,11 @@ const Dashboard = props => {
     </View>
   );
 
+  const PatientSelection = item => {
+    modalizeRef.current?.close();
+    props.navigation.navigate('PatientDetails');
+  };
+
   return (
     <View style={styles.container}>
       <View style={{}}>
@@ -117,12 +193,12 @@ const Dashboard = props => {
               borderRadius: 10,
               backgroundColor: COLORS.white,
               padding: SIZES.padding,
-              shadowColor: data?.weight > 1.5 ? 'red' : '#000',
+              shadowColor: data?.spo2 > 96 ? 'red' : '#000',
               shadowOffset: {
                 width: 0,
                 height: 2,
               },
-              shadowOpacity: data?.weight > 1.5 ? 0.5 : 0.1,
+              shadowOpacity: data?.spo2 > 96 ? 0.5 : 0.1,
               shadowRadius: 6.65,
               elevation: 3,
             }}>
@@ -131,22 +207,79 @@ const Dashboard = props => {
               style={{
                 flexDirection: 'row',
                 marginTop: SIZES.base,
-                justifyContent: 'space-between',
+                flex: 1,
               }}>
-              <Text style={{...FONTS.body4}}>Temperature</Text>
-              <Text style={{...FONTS.body4}}>:</Text>
-              <Text style={{...FONTS.body4}}>{data?.temp} ℃</Text>
+              <Text style={{...FONTS.body4, flex: 1}}>Pulse Rate</Text>
+              <Text style={{...FONTS.body4, flex: 1, textAlign: 'center'}}>
+                :
+              </Text>
+              <Text style={{...FONTS.body4, flex: 1, textAlign: 'right'}}>
+                {data?.bpm?.toFixed(2)}
+              </Text>
             </View>
             <View
               style={{
                 flexDirection: 'row',
                 marginTop: SIZES.base,
-                justifyContent: 'space-between',
+                flex: 1,
               }}>
-              <Text style={{...FONTS.body4}}>Bot weight</Text>
-              <Text style={{...FONTS.body4}}>:</Text>
-              <Text style={{...FONTS.body4}}>{data?.weight}</Text>
+              <Text style={{...FONTS.body4, flex: 1}}>Oxygen level</Text>
+              <Text style={{...FONTS.body4, flex: 1, textAlign: 'center'}}>
+                :
+              </Text>
+              <Text style={{...FONTS.body4, flex: 1, textAlign: 'right'}}>
+                {data?.spo2?.toFixed(2)}
+              </Text>
             </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: SIZES.base,
+                flex: 1,
+              }}>
+              <Text style={{...FONTS.body4, flex: 1}}>Temperature</Text>
+              <Text style={{...FONTS.body4, flex: 1, textAlign: 'center'}}>
+                :
+              </Text>
+              <Text style={{...FONTS.body4, flex: 1, textAlign: 'right'}}>
+                {temper?.temp?.toFixed(2)}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: SIZES.base,
+                flex: 1,
+              }}>
+              <Text style={{...FONTS.body4, flex: 1}}>Weight</Text>
+              <Text style={{...FONTS.body4, flex: 1, textAlign: 'center'}}>
+                :
+              </Text>
+              <Text style={{...FONTS.body4, flex: 1, textAlign: 'right'}}>
+                {temper?.weight?.toFixed(2)}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              style={{
+                width: '80%',
+                borderWidth: 1,
+                borderColor: COLORS.primary,
+                borderRadius: 10,
+                margin: SIZES.padding,
+                padding: SIZES.base,
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignSelf: 'center',
+              }}
+              onPress={() => {
+                modalizeRef.current?.open();
+              }}>
+              <Text style={{textAlign: 'center', color: COLORS.primary}}>
+                Add Patients Details
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <View
@@ -177,7 +310,10 @@ const Dashboard = props => {
                 Amount="20"
                 Increment="-10"
                 icon={icons.list}
-                onPress={() => alert('Current')}
+                onPress={() => {
+                  alert('Current');
+                  props.navigation.navigate('Control');
+                }}
               />
               <DashboardCards
                 colors={COLORS.red}
@@ -265,6 +401,98 @@ const Dashboard = props => {
               </View>
             </View>
           </View>
+          <Modalize
+            ref={modalizeRef}
+            withReactModal={true}
+            adjustToContentHeight={true}
+            disableScrollIfPossible={true}>
+            <View
+              style={{marginLeft: SIZES.padding, marginRight: SIZES.padding}}>
+              <Text
+                style={{
+                  ...FONTS.h2,
+                  textAlign: 'center',
+                  marginTop: SIZES.base * 2,
+                  marginBottom: SIZES.base,
+                }}>
+                Patients List
+              </Text>
+              <View style={{height: 235}}>
+                <ScrollView>
+                  {Patients.map((item, index) => (
+                    <View key={index}>
+                      <TouchableOpacity
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          paddingVertical: SIZES.base,
+                        }}
+                        onPress={() => PatientSelection(item)}>
+                        <Image
+                          source={icons.dot}
+                          style={{
+                            width: 15,
+                            height: 15,
+                            tintColor: COLORS.green,
+                          }}
+                        />
+
+                        <View style={{flex: 1, marginLeft: SIZES.radius}}>
+                          <Text style={{...FONTS.h3}}>{item.name}</Text>
+                          <Text style={{color: COLORS.gray, ...FONTS.body5}}>
+                            Patient ID : {item.id}
+                          </Text>
+                        </View>
+
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            height: '100%',
+                            alignItems: 'center',
+                          }}>
+                          <Text
+                            style={{
+                              color:
+                                item.type == 'B' ? COLORS.green : COLORS.black,
+                              ...FONTS.h3,
+                            }}>
+                            {item.status}
+                          </Text>
+                          {/* <Image
+                          source={icons.right_arrow}
+                          style={{
+                            width: 20,
+                            height: 20,
+                            tintColor: COLORS.gray,
+                          }}
+                        /> */}
+                        </View>
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          width: '100%',
+                          height: 1,
+                          backgroundColor: COLORS.lightGray,
+                        }}></View>
+                    </View>
+                  ))}
+                </ScrollView>
+              </View>
+
+              {/* <View
+            style={{
+              marginTop: SIZES.padding,
+              marginBottom: SIZES.padding * 1.5,
+            }}>
+            <TextButton
+              lable="Patient List"
+              onPress={() => {
+                modalizeRef.current?.close();
+              }}
+            />
+          </View> */}
+            </View>
+          </Modalize>
         </ScrollView>
       </View>
     </View>

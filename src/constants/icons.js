@@ -15,6 +15,10 @@ const cart = require('../assets/icons/cart.png');
 const select = require('../assets/icons/select.png');
 const addPhoto = require('../assets/icons/addPhoto.png');
 const clear = require('../assets/icons/clear.png');
+const Aup = require('../assets/icons/Aup.png');
+const Aright = require('../assets/icons/Aright.png');
+const Adown = require('../assets/icons/Adown.png');
+const Aleft = require('../assets/icons/Aleft.png');
 
 export default {
   settings,
@@ -34,4 +38,8 @@ export default {
   select,
   addPhoto,
   clear,
+  Aup,
+  Aright,
+  Adown,
+  Aleft,
 };
